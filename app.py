@@ -102,7 +102,7 @@ def chatbot_ui():
         else:
             # Get the chatbot's response
             response = ai_chatbot(user_input)
-            st.write(f"**BumbleBee** {response}")
+            st.write(f"**BumbleBee🤖:** {response}")
 
 # Comes under mental health and wellness
 # Meditation timer
@@ -120,16 +120,9 @@ def meditation_timer():
 def stress_management_tips():
     """Display stress management tips"""
     st.title("Stress Management Tips")
-    tips = [
-        "Take deep breaths for 5 minutes.",
-        "Go for a walk in nature.",
-        "Write down your thoughts in a journal.",
-        "Listen to calming music.",
-        "Practice gratitude by listing 3 things you're thankful for."
-    ]
-    st.write("Here are some tips to manage stress:")
-    for tip in tips:
-        st.write(f"-- {tip}")
+    tips="Suggest stress managing tips"
+    response=ai_chatbot(tips)
+    st.write(f"**BumbleBee🤖:**: {response}")
 
 def mood_tracker(username):
     """Track user's mood"""
@@ -143,7 +136,7 @@ def mood_tracker(username):
         st.success("Mood logged successfully!")
         mood_1=f"i am {mood} today suggest ideas to make a good mood if my mood is not healthy"
         response = ai_chatbot(mood_1)
-        st.write(f"**BumbleBee**: {response}")
+        st.write(f"**BumbleBee🤖:**: {response}")
 
 #Guide users through breathing exercises
 def breathing_exercises():
@@ -173,7 +166,7 @@ def view_profile(username):
             e = str(user[7])
             grade = f"my name is {a} i am studying btech in {c} semester {d} my grade is {b} and my interested subjects are {e} please make a profile and suggest a study plan"
             response = ai_chatbot(grade)
-            st.write(f"**BumbleBee** {response}")
+            st.write(f"**BumbleBee🤖:** {response}")
  
 
         elif menu_choice == "Subjects":
