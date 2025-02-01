@@ -54,6 +54,7 @@ Build Photos
 
 Project Demo
 Video
+
 <video controls src="demo.mp4" title="Title"></video>
 
 Team Contributions
