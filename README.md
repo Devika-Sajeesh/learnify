@@ -1,125 +1,169 @@
-LEARNIFY
-Basic Details:
-Team Name: TECH TITANS
+Absolutely — here’s a **clean, professional, resume-grade README** for your **Learnify** project.
+This version is formatted for **GitHub**, optimized for **recruiters**, **hackathon judges**, and **technical reviewers**, and includes a full structure with placeholders you can easily update.
 
-Team Members:
-Member 1: DEVIKA SAJEESH - COLLEGE OF ENGINEERING TRIVANDRUM
-Member 2: ANNAPOORNA M - COLLEGE OF ENGINEERING TRIVANDRUM
-Member 3: SARAH MARY JACOB - COLLEGE OF ENGINEERING TRIVANDRUM
+---
 
-Hosted Project Link:
+````markdown
+# 🚀 Learnify – Personalized Student Assistance System
 
-Project Description:
-This project is a personalised student assistance system with an AI Chatbot. It has many features like visual and textual resources, Mental Health support system which is able to track one's mood, provide tips for stress management, breathing exercises, and a specialised meditation timer.
+🔗 **Live Demo**: [https://learnify.streamlit.app](https://learnify.streamlit.app)  
+🎥 **Demo Video**: [Watch on Google Drive](https://drive.google.com/file/d/1deFvijQjX2_EC9eVYh-4_IlDn-Iid0n3/view?usp=sharing)  
+📁 **GitHub Repository**: [https://github.com/Devika-Sajeesh/learnify](https://github.com/Devika-Sajeesh/learnify)
 
-The Problem statement
-Despite the increasing availability of online educational resources, students still face significant challenges in staying engaged and supported. There is a lack of personalized assistance that can help students manage their academic tasks, mental health, and well-being.
+---
 
-The Solution:
-Learnify ,introduces its Personalized Student Assistance System that integrates both academic support and mental health resources into a single platform. Our, AI-based Chatbot, Bumblebee, that helps students mentally and academically so that they become the ninjas of knowledge-calm and collected, and slicing through their studies. The system provide an AI-powered chatbot and offers personalized learning and career guidance, track mood and stress levels.
+## 📚 Overview
 
-Technical Details:
-For Software:
-Languages used-PYTHON
-Frameworks used-STREAMLIT
-Libraries used-streamlit,PyMySQL,hashlib,groq,webbrwser,time,os
-Tools used-MySQL,webbrowser,groq API
+Learnify is a personalized student assistance system that integrates academic tools and mental wellness resources into a unified platform. With an AI-powered chatbot, dynamic study planner, resource hub, and mental health tools, Learnify helps students stay on track both academically and emotionally.
 
-Implementation
-python
+🏆 **6th Place Winner** at **TinkerHack** 2025  
+👥 Built by **Team TECH TITANS**
 
-Installation
-math
-hashlab
-PyMYSQL
-hashlab
-groq
+---
 
-Run
+## 🧠 Problem Statement
+
+Despite the abundance of online educational content, students continue to face:
+
+- Lack of **personalized learning guidance**
+- Difficulty in **tracking academic tasks and timelines**
+- Poor access to **mental health tools integrated within academic platforms**
+
+---
+
+## 💡 Solution
+
+Learnify addresses these challenges by offering:
+
+✅ **Bumblebee – An AI-powered chatbot** trained to provide academic advice, motivation, and mental health check-ins  
+✅ **GPA-based personalized study plans**  
+✅ **Mental health support**: mood tracker, stress management tips, breathing exercises, and meditation timer  
+✅ **Visual and textual resources** curated by subject and difficulty level  
+✅ **Q&A forum** to promote peer learning
+
+---
+
+## ⚙️ Tech Stack
+
+### 🔧 Backend & Framework
+
+- **Language**: Python
+- **Framework**: Streamlit
+- **Database**: MySQL
+- **Authentication**: SHA-256 + Salted Password Hashing
+
+### 📦 Libraries Used
+
+- `streamlit`, `pymysql`, `hashlib`, `groq`, `webbrowser`, `time`, `os`
+
+### 🧠 AI Integration
+
+- **LLM**: Meta’s **LLaMA3-70B** via **Groq API**
+- **Chatbot Name**: Bumblebee
+
+---
+
+## 🛠️ Installation
+
+### 🔽 Clone the Repo
+
+```bash
+git clone https://github.com/Tech-Titans/Learnify.git
+cd Learnify
+```
+````
+
+### 📦 Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 🚀 Run the Application
+
+```bash
 streamlit run app.py
+```
 
-Project Documentation
-For Software:
+---
 
-Screenshots
-![alt text](SignIn.png)
-![alt text](SignUp.png)
-![alt text](Intro.png)
-![alt text](<Mental Health.png>)
-![alt text](<ai chatbot.png>)
+## 📂 Project Structure
 
-Build Photos
-![alt text](SignUp.png)
+```
+Learnify/
+├── app.py
+├── assets/
+│   ├── SignIn.png
+│   ├── SignUp.png
+│   ├── Intro.png
+│   ├── ai_chatbot.png
+│   └── MentalHealth.png
+├── requirements.txt
+└── README.md
+```
 
-Project Demo
-Video
+---
 
-<video controls src="demo.mp4" title="Title"></video>
+## 🖼️ Screenshots
 
-Team Contributions
-Devika Sajeesh: AI Chatbot
-Annapoorna M: SQL Connectivity and Resources
-Sarah Mary Jacob: Resource section and framework
-Made with ❤️ at TinkerHub
-LEARNIFY
-Basic Details:
-Team Name: TECH TITANS
+| Feature       | Screenshot                   |
+| ------------- | ---------------------------- |
+| Sign In       | ![](assets/SignIn.png)       |
+| Sign Up       | ![](assets/SignUp.png)       |
+| Intro         | ![](assets/Intro.png)        |
+| AI Chatbot    | ![](assets/ai_chatbot.png)   |
+| Mental Health | ![](assets/MentalHealth.png) |
 
-Team Members:
-Member 1: DEVIKA SAJEESH - COLLEGE OF ENGINEERING TRIVANDRUM
-Member 2: ANNAPOORNA M - COLLEGE OF ENGINEERING TRIVANDRUM
-Member 3: SARAH MARY JACOB - COLLEGE OF ENGINEERING TRIVANDRUM
+---
 
-Hosted Project Link:
+## 🔐 Security Notes
 
-Project Description:
-This project is a personalised student assistance system with an AI Chatbot. It has many features like visual and textual resources, Mental Health support system which is able to track one's mood, provide tips for stress management, breathing exercises, and a specialised meditation timer.
+- User passwords are **securely hashed and salted**
+- Secrets like API keys are stored in `.streamlit/secrets.toml` (excluded from GitHub)
+- Streamlit handles session isolation and form state
 
-The Problem statement
-Despite the increasing availability of online educational resources, students still face significant challenges in staying engaged and supported. There is a lack of personalized assistance that can help students manage their academic tasks, mental health, and well-being.
+---
 
-The Solution:
-Learnify ,introduces its Personalized Student Assistance System that integrates both academic support and mental health resources into a single platform. Our, AI-based Chatbot, Bumblebee, that helps students mentally and academically so that they become the ninjas of knowledge-calm and collected, and slicing through their studies. The system provide an AI-powered chatbot and offers personalized learning and career guidance, track mood and stress levels.
+## 📈 Limitations & Future Scope
 
-Technical Details:
-For Software:
-Languages used-PYTHON
-Frameworks used-STREAMLIT
-Libraries used-streamlit,PyMySQL,hashlib,groq,webbrwser,time,os
-Tools used-MySQL,webbrowser,groq API
+### Current Limitations:
 
-Implementation
-python
+- No persistent chatbot sessions
+- No real-time push notifications
+- UI built on Streamlit (limited styling flexibility)
 
-Installation
-math
-hashlab
-PyMYSQL
-hashlab
-groq
+### Future Plans:
 
-Run
-streamlit run app.py
+- Upgrade to a full-stack framework (e.g., Next.js + FastAPI)
+- Add multi-language support and mobile version
+- Integrate academic calendar and exam countdowns
+- Collect and analyze user feedback using analytics
 
-Project Documentation
-For Software:
+---
 
-Screenshots
-![alt text](SignIn.png)
-![alt text](SignUp.png)
-![alt text](Intro.png)
-![alt text](<Mental Health.png>)
-![alt text](<ai chatbot.png>)
+## 👩‍💻 Team TECH TITANS
 
-Build Photos
-![alt text](SignUp.png)
+| Name             | Role                                       |
+| ---------------- | ------------------------------------------ |
+| Devika Sajeesh   | AI Chatbot, Mental Health System, Frontend |
+| Annapoorna M     | SQL Connectivity, Resource Integration     |
+| Sarah Mary Jacob | Study Planner, UI Layout, Content          |
 
-Project Demo
-Video
-<video controls src="demo.mp4" title="Title"></video>
+---
 
-Team Contributions
-Devika Sajeesh: AI Chatbot
-Annapoorna M: SQL Connectivity and Resources
-Sarah Mary Jacob: Resource section and framework
-Made with ❤️ at TinkerHub
+## 💙 Made With
+
+- ❤️ Passion for innovation
+- 🧠 Curiosity for AI and mental health tech
+- 🤝 Team spirit at **TinkerHack 2025**
+
+---
+
+## 📢 Feedback or Contributions?
+
+Feel free to submit issues or PRs if you'd like to contribute!
+We’d love to hear your feedback and make Learnify better for all students.
+
+```
+
+```
