@@ -1,8 +1,3 @@
-Absolutely — here’s a **clean, professional, resume-grade README** for your **Learnify** project.
-This version is formatted for **GitHub**, optimized for **recruiters**, **hackathon judges**, and **technical reviewers**, and includes a full structure with placeholders you can easily update.
-
----
-
 ````markdown
 # 🚀 Learnify – Personalized Student Assistance System
 
