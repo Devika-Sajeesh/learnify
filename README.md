@@ -104,7 +104,7 @@ Learnify/
 | Sign In       | ![](images/SignIn.png)       |
 | Sign Up       | ![](images/SignUp.png)       |
 | Intro         | ![](images/Intro.png)        |
-| AI Chatbot    | ![](images/ai_chatbot.png)   |
+| AI Chatbot    | ![](images/aichatbot.png)   |
 | Mental Health | ![](images/MentalHealth.png) |
 
 ---
