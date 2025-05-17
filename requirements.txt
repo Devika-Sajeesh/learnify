@@ -1,4 +1,3 @@
 streamlit==1.41.1
 PyMySQL==1.1.1
 groq==0.16.0
-hashlib  # standard lib, no need to install
