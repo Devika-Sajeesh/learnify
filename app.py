@@ -14,6 +14,7 @@ st.set_page_config(
     layout="wide"
 )
 
+
 # --- Initialize Session State ---
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
@@ -35,27 +36,25 @@ def display_header():
 def initialize_database():
     """Create database and tables if they don't exist"""
     try:
-        # First connect without specifying a database
+        # Step 1: Connect to MySQL (no DB yet)
         connection = pymysql.connect(
             host=st.secrets["DB_HOST"],
+            port=int(st.secrets["DB_PORT"]),
             user=st.secrets["DB_USER"],
             password=st.secrets["DB_PASSWORD"],
-            autocommit=True  # Required for CREATE DATABASE
+            autocommit=True,
+            connect_timeout=5
         )
-        
+
         with connection.cursor() as cursor:
-            # Create database if not exists
             cursor.execute("CREATE DATABASE IF NOT EXISTS gradingsystem")
-            
-            # Verify database was created
             cursor.execute("SHOW DATABASES LIKE 'gradingsystem'")
             if not cursor.fetchone():
                 raise Exception("Failed to create database")
-            
-            # Now connect to the specific database
-            cursor.execute("USE gradingsystem")
-            
-            # Create tables with error handling
+
+        connection.select_db("gradingsystem")  # Switch DB
+
+        with connection.cursor() as cursor:
             tables = [
                 """CREATE TABLE IF NOT EXISTS users (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -93,32 +92,32 @@ def initialize_database():
                     FOREIGN KEY (user_id) REFERENCES users(id)
                 )"""
             ]
-            
+
             for table in tables:
-                try:
-                    cursor.execute(table)
-                except pymysql.Error as e:
-                    if "already exists" not in str(e):
-                        raise
-        
+                cursor.execute(table)
+
         st.session_state.db_initialized = True
         return True
-        
+
     except Exception as e:
-        st.error(f"Database initialization failed: {str(e)}")
+        st.error(f"❌ Database initialization failed: {str(e)}")
         return False
+
     finally:
         if 'connection' in locals() and connection:
             connection.close()
 
+
 # --- Database Connection ---
 def get_db_connection():
     """Create and return a database connection with retry logic"""
+    
     max_retries = 3
     for attempt in range(max_retries):
         try:
             connection = pymysql.connect(
                 host=st.secrets["DB_HOST"],
+                port=int(st.secrets["DB_PORT"]),
                 user=st.secrets["DB_USER"],
                 password=st.secrets["DB_PASSWORD"],
                 database=st.secrets["DB_NAME"],
