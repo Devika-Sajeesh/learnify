@@ -1,4 +1,3 @@
-````markdown
 # 🚀 Learnify – Personalized Student Assistance System
 
 🔗 **Live Demo**: [https://learnify.streamlit.app](https://learnify.streamlit.app)  
