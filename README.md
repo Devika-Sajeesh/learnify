@@ -1,6 +1,6 @@
 # 🚀 Learnify – Personalized Student Assistance System
 
-🔗 **Live Demo**: [https://learnify.streamlit.app](https://learnify.streamlit.app)  
+🔗 **Live Demo**: [https://learnify.streamlit.app](https://learnify-igscraddpe8unhqnwxkcxe.streamlit.app/)  
 🎥 **Demo Video**: [Watch on Google Drive](https://drive.google.com/file/d/1deFvijQjX2_EC9eVYh-4_IlDn-Iid0n3/view?usp=sharing)  
 📁 **GitHub Repository**: [https://github.com/Devika-Sajeesh/learnify](https://github.com/Devika-Sajeesh/learnify)
 
@@ -101,11 +101,11 @@ Learnify/
 
 | Feature       | Screenshot                   |
 | ------------- | ---------------------------- |
-| Sign In       | ![](assets/SignIn.png)       |
-| Sign Up       | ![](assets/SignUp.png)       |
-| Intro         | ![](assets/Intro.png)        |
-| AI Chatbot    | ![](assets/ai_chatbot.png)   |
-| Mental Health | ![](assets/MentalHealth.png) |
+| Sign In       | ![](images/SignIn.png)       |
+| Sign Up       | ![](images/SignUp.png)       |
+| Intro         | ![](images/Intro.png)        |
+| AI Chatbot    | ![](images/ai_chatbot.png)   |
+| Mental Health | ![](images/MentalHealth.png) |
 
 ---
 
