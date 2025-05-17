@@ -65,7 +65,6 @@ Learnify addresses these challenges by offering:
 git clone https://github.com/Tech-Titans/Learnify.git
 cd Learnify
 ```
-````
 
 ### 📦 Install Dependencies
 
