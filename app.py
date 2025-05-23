@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pymysql
 import hashlib
@@ -34,18 +35,27 @@ def display_header():
 
 # --- Database Initialization ---
 def initialize_database():
-    """Initialize tables if they don't exist"""
+    """Create database and tables if they don't exist"""
     try:
+        # Step 1: Connect to MySQL (no DB yet)
         connection = pymysql.connect(
             host=st.secrets["DB_HOST"],
+            port=int(st.secrets["DB_PORT"]),
             user=st.secrets["DB_USER"],
             password=st.secrets["DB_PASSWORD"],
-            database=st.secrets["DB_NAME"],
-            autocommit=True
+            autocommit=True,
+            connect_timeout=5
         )
 
         with connection.cursor() as cursor:
-            # Do NOT create a database — Railway gives one
+            cursor.execute("CREATE DATABASE IF NOT EXISTS gradingsystem")
+            cursor.execute("SHOW DATABASES LIKE 'gradingsystem'")
+            if not cursor.fetchone():
+                raise Exception("Failed to create database")
+
+        connection.select_db("gradingsystem")  # Switch DB
+
+        with connection.cursor() as cursor:
             tables = [
                 """CREATE TABLE IF NOT EXISTS users (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -91,8 +101,9 @@ def initialize_database():
         return True
 
     except Exception as e:
-        st.error(f"Database initialization failed: {str(e)}")
+        st.error(f"❌ Database initialization failed: {str(e)}")
         return False
+
     finally:
         if 'connection' in locals() and connection:
             connection.close()
@@ -100,10 +111,9 @@ def initialize_database():
 
 # --- Database Connection ---
 def get_db_connection():
-    """Create and return a database connection with proper Railway config"""
-    max_retries = 3
-    retry_delay = 2
+    """Create and return a database connection with retry logic"""
     
+    max_retries = 3
     for attempt in range(max_retries):
         try:
             connection = pymysql.connect(
@@ -112,58 +122,22 @@ def get_db_connection():
                 user=st.secrets["DB_USER"],
                 password=st.secrets["DB_PASSWORD"],
                 database=st.secrets["DB_NAME"],
-                ssl={
-                    'ca': '/etc/ssl/certs/ca-certificates.crt'  # Updated SSL path
-                },
-                connect_timeout=10,
-                cursorclass=pymysql.cursors.DictCursor
+                cursorclass=pymysql.cursors.DictCursor,
+                connect_timeout=5
             )
-            # Test connection immediately
+            # Test the connection
             with connection.cursor() as cursor:
                 cursor.execute("SELECT 1")
             return connection
-        except pymysql.MySQLError as e:
-            error_msg = f"""
-            Connection attempt {attempt + 1} failed:
-            Error {e.args[0]}: {e.args[1]}
-            
-            Verify these settings:
-            - Host: {st.secrets["DB_HOST"]}
-            - Port: {st.secrets["DB_PORT"]}
-            - User: {st.secrets["DB_USER"]}
-            - DB Name: {st.secrets["DB_NAME"]}
-            """
-            st.warning(error_msg)
-            
-            if attempt == max_retries - 1:
-                st.error("🚨 Failed to connect after multiple attempts")
-                st.info("""
-                Try these solutions:
-                1. Restart your Railway database service
-                2. Reset your database credentials
-                3. Check Railway status page for outages
-                """)
+        except pymysql.Error as e:
+            if attempt == max_retries - 1:  # Last attempt
+                st.error(f"Database connection failed after {max_retries} attempts")
+                # Try to reinitialize database if connection fails
+                if not st.session_state.db_initialized:
+                    if initialize_database():
+                        st.rerun()
                 return None
-            time.sleep(retry_delay)
-def check_railway_connection():
-    """Special checks for Railway.app deployments"""
-    if "rlwy.net" in st.secrets["DB_HOST"]:
-        st.info("Checking Railway.app database connection...")
-        
-        # Verify port is correctly set
-        if not st.secrets["DB_PORT"].isdigit():
-            st.error("DB_PORT must be a number")
-            return False
-            
-        # Verify all required credentials exist
-        required_keys = ["DB_HOST", "DB_USER", "DB_PASSWORD", "DB_NAME", "DB_PORT"]
-        for key in required_keys:
-            if key not in st.secrets or not st.secrets[key]:
-                st.error(f"Missing database credential: {key}")
-                return False
-                
-        return True
-    return True
+            time.sleep(1)  # Wait before retrying
 
 # --- Security Functions ---
 def hash_password(password):
@@ -659,13 +633,7 @@ def view_profile(username):
 # --- Main Application ---
 def main():
     """Main application controller"""
-    display_header()
-    
-    # First check Railway-specific requirements
-    if not check_railway_connection():
-        st.stop()  # Don't proceed if checks fail
-    
-    # Then proceed with initialization
+    # Initialize database if not already done
     if not st.session_state.db_initialized:
         with st.spinner("Initializing database. Please wait..."):
             if initialize_database():
@@ -674,15 +642,11 @@ def main():
                 time.sleep(1)
                 st.rerun()
             else:
-                st.error("""
-                Critical: Failed to initialize database. 
-                Possible causes:
-                1. Database server is not running
-                2. Incorrect credentials in secrets
-                3. Network firewall blocking connection
-                4. Railway service needs to be restarted
-                """)
-                st.stop()
+                st.error("Critical: Failed to initialize database. Check MySQL server and try again.")
+                return
+    
+    # Display header after initialization
+    display_header()
     
     # Main application logic
     if st.session_state.logged_in:
