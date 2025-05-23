@@ -34,27 +34,18 @@ def display_header():
 
 # --- Database Initialization ---
 def initialize_database():
-    """Create database and tables if they don't exist"""
+    """Initialize tables if they don't exist"""
     try:
-        # Step 1: Connect to MySQL (no DB yet)
         connection = pymysql.connect(
             host=st.secrets["DB_HOST"],
-            port=int(st.secrets["DB_PORT"]),
             user=st.secrets["DB_USER"],
             password=st.secrets["DB_PASSWORD"],
-            autocommit=True,
-            connect_timeout=5
+            database=st.secrets["DB_NAME"],
+            autocommit=True
         )
 
         with connection.cursor() as cursor:
-            cursor.execute("CREATE DATABASE IF NOT EXISTS gradingsystem")
-            cursor.execute("SHOW DATABASES LIKE 'gradingsystem'")
-            if not cursor.fetchone():
-                raise Exception("Failed to create database")
-
-        connection.select_db("gradingsystem")  # Switch DB
-
-        with connection.cursor() as cursor:
+            # Do NOT create a database — Railway gives one
             tables = [
                 """CREATE TABLE IF NOT EXISTS users (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -100,9 +91,8 @@ def initialize_database():
         return True
 
     except Exception as e:
-        st.error(f"❌ Database initialization failed: {str(e)}")
+        st.error(f"Database initialization failed: {str(e)}")
         return False
-
     finally:
         if 'connection' in locals() and connection:
             connection.close()
