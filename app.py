@@ -35,75 +35,68 @@ def display_header():
 
 # --- Database Initialization ---
 def initialize_database():
-    """Create database and tables if they don't exist"""
+    """Create database tables if they don't exist"""
     try:
-        # Step 1: Connect to MySQL (no DB yet)
+        # Connect directly to the Railway database
         connection = pymysql.connect(
             host=st.secrets["DB_HOST"],
             port=int(st.secrets["DB_PORT"]),
             user=st.secrets["DB_USER"],
             password=st.secrets["DB_PASSWORD"],
+            database=st.secrets["DB_NAME"],  # Use the database name from secrets
             autocommit=True,
             connect_timeout=5
         )
 
+        # Create tables directly (database already exists in Railway)
+        table_queries = [
+            """CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                username VARCHAR(50) UNIQUE NOT NULL,
+                password VARCHAR(64) NOT NULL,
+                gpa DECIMAL(3,2),
+                branch VARCHAR(50),
+                sem VARCHAR(20),
+                subin TEXT,
+                subnin TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )""",
+            """CREATE TABLE IF NOT EXISTS questions (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT NOT NULL,
+                question_text TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )""",
+            """CREATE TABLE IF NOT EXISTS answers (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                question_id INT NOT NULL,
+                user_id INT NOT NULL,
+                answer_text TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (question_id) REFERENCES questions(id),
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )""",
+            """CREATE TABLE IF NOT EXISTS wellness (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT NOT NULL,
+                mood VARCHAR(20) NOT NULL,
+                notes TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )"""
+        ]
+
         with connection.cursor() as cursor:
-            cursor.execute("CREATE DATABASE IF NOT EXISTS gradingsystem")
-            cursor.execute("SHOW DATABASES LIKE 'gradingsystem'")
-            if not cursor.fetchone():
-                raise Exception("Failed to create database")
-
-        connection.select_db("gradingsystem")  # Switch DB
-
-        with connection.cursor() as cursor:
-            tables = [
-                """CREATE TABLE IF NOT EXISTS users (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    username VARCHAR(50) UNIQUE NOT NULL,
-                    password VARCHAR(64) NOT NULL,
-                    gpa DECIMAL(3,2),
-                    branch VARCHAR(50),
-                    sem VARCHAR(20),
-                    subin TEXT,
-                    subnin TEXT,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-                )""",
-                """CREATE TABLE IF NOT EXISTS questions (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    user_id INT NOT NULL,
-                    question_text TEXT NOT NULL,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (user_id) REFERENCES users(id)
-                )""",
-                """CREATE TABLE IF NOT EXISTS answers (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    question_id INT NOT NULL,
-                    user_id INT NOT NULL,
-                    answer_text TEXT NOT NULL,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (question_id) REFERENCES questions(id),
-                    FOREIGN KEY (user_id) REFERENCES users(id)
-                )""",
-                """CREATE TABLE IF NOT EXISTS wellness (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    user_id INT NOT NULL,
-                    mood VARCHAR(20) NOT NULL,
-                    notes TEXT,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (user_id) REFERENCES users(id)
-                )"""
-            ]
-
-            for table in tables:
-                cursor.execute(table)
-
+            for query in table_queries:
+                cursor.execute(query)
+        
         st.session_state.db_initialized = True
         return True
 
     except Exception as e:
         st.error(f"❌ Database initialization failed: {str(e)}")
         return False
-
     finally:
         if 'connection' in locals() and connection:
             connection.close()
@@ -112,32 +105,23 @@ def initialize_database():
 # --- Database Connection ---
 def get_db_connection():
     """Create and return a database connection with retry logic"""
-    
     max_retries = 3
     for attempt in range(max_retries):
         try:
-            connection = pymysql.connect(
+            return pymysql.connect(
                 host=st.secrets["DB_HOST"],
                 port=int(st.secrets["DB_PORT"]),
                 user=st.secrets["DB_USER"],
                 password=st.secrets["DB_PASSWORD"],
-                database=st.secrets["DB_NAME"],
+                database=st.secrets["DB_NAME"],  
                 cursorclass=pymysql.cursors.DictCursor,
                 connect_timeout=5
             )
-            # Test the connection
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT 1")
-            return connection
         except pymysql.Error as e:
-            if attempt == max_retries - 1:  # Last attempt
+            if attempt == max_retries - 1:
                 st.error(f"Database connection failed after {max_retries} attempts")
-                # Try to reinitialize database if connection fails
-                if not st.session_state.db_initialized:
-                    if initialize_database():
-                        st.rerun()
                 return None
-            time.sleep(1)  # Wait before retrying
+            time.sleep(1)
 
 # --- Security Functions ---
 def hash_password(password):
