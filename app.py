@@ -100,9 +100,9 @@ def initialize_database():
 
 # --- Database Connection ---
 def get_db_connection():
-    """Create and return a database connection with retry logic"""
+    """Create and return a database connection with proper Railway config"""
     max_retries = 3
-    retry_delay = 2  # seconds
+    retry_delay = 2
     
     for attempt in range(max_retries):
         try:
@@ -112,21 +112,37 @@ def get_db_connection():
                 user=st.secrets["DB_USER"],
                 password=st.secrets["DB_PASSWORD"],
                 database=st.secrets["DB_NAME"],
-                ssl={"ssl": {"ca": "/etc/ssl/cert.pem"}},
-                cursorclass=pymysql.cursors.DictCursor,
-                connect_timeout=10  # Increased from 5
+                ssl={
+                    'ca': '/etc/ssl/certs/ca-certificates.crt'  # Updated SSL path
+                },
+                connect_timeout=10,
+                cursorclass=pymysql.cursors.DictCursor
             )
-            # Test the connection
+            # Test connection immediately
             with connection.cursor() as cursor:
                 cursor.execute("SELECT 1")
             return connection
-        except pymysql.Error as e:
-            st.warning(f"Connection attempt {attempt + 1} failed: {str(e)}")
+        except pymysql.MySQLError as e:
+            error_msg = f"""
+            Connection attempt {attempt + 1} failed:
+            Error {e.args[0]}: {e.args[1]}
+            
+            Verify these settings:
+            - Host: {st.secrets["DB_HOST"]}
+            - Port: {st.secrets["DB_PORT"]}
+            - User: {st.secrets["DB_USER"]}
+            - DB Name: {st.secrets["DB_NAME"]}
+            """
+            st.warning(error_msg)
+            
             if attempt == max_retries - 1:
-                st.error(f"""Failed to connect after {max_retries} attempts. Please check:
-                    - Database server status
-                    - Connection credentials
-                    - Network connectivity""")
+                st.error("🚨 Failed to connect after multiple attempts")
+                st.info("""
+                Try these solutions:
+                1. Restart your Railway database service
+                2. Reset your database credentials
+                3. Check Railway status page for outages
+                """)
                 return None
             time.sleep(retry_delay)
 def check_railway_connection():
