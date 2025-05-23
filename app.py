@@ -112,6 +112,7 @@ def get_db_connection():
                 user=st.secrets["DB_USER"],
                 password=st.secrets["DB_PASSWORD"],
                 database=st.secrets["DB_NAME"],
+                ssl={"ssl": {"ca": "/etc/ssl/cert.pem"}},
                 cursorclass=pymysql.cursors.DictCursor,
                 connect_timeout=10  # Increased from 5
             )
